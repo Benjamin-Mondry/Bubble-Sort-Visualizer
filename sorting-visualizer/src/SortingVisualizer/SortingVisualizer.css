@@ -11,3 +11,8 @@
     display: inline-block;
     margin: 0 1px;
 }
+
+.nums{
+    transition: 1s margin;
+    position: absolute;
+}
