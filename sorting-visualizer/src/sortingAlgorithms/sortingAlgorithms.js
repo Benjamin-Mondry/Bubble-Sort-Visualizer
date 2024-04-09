@@ -1,24 +1,33 @@
-export function bubbleSort(array){
+export function getBubbleSort(array){
     const animations = []
-    let arr = array.slice(0);
+    const arr = array.slice();
+    bubbleSort(arr,animations)
+    
+    return animations
+}
+function bubbleSort(arr,animations){
     const size = arr.length 
+    var swapped = false;
     for(let i =0; i< size;i++){
+        swapped = false;
         for(let j = 0; j < size -i-1;j++){
-            //animations.push([j, j+1])
-            //animations.push([j, j+1])
+            animations.push([j, j+1]) // push indexes of j and j+1 to change colour 
+            animations.push([j, j+1]) //duplicate push to revert colour change 
             if(arr[j] > arr[j+1]){
-                let temp = arr[j]
-                animations.push([j, j+1])
-                animations.push([j, j+1])
-                animations.push([j, j+1])
-                
-                //values we compare, so we push to change colour once.
-                // push again to revert colour 
+                swapped = true;
+                animations.push([j, arr[j+1]])  // pushes index,value pair of adjacent element
+                animations.push([j+1, arr[j]])  // pushes index,value pair of current element 
+                let temp = arr[j]                       
                 arr[j] = arr[j+1]
                 arr[j+1] = temp
+            }else{
+                animations.push([-1,-1]) // place holder if no swap 
+                animations.push([-1,-1]) // place holder if no swap 
             }
+        }
+        if(!swapped){
+            return;
         }
         
     }
-    return animations
 };

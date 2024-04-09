@@ -1,10 +1,10 @@
 import React from 'react';
-import {bubbleSort} from '../sortingAlgorithms/sortingAlgorithms.js';
+import {getBubbleSort} from '../sortingAlgorithms/sortingAlgorithms.js';
 import './SortingVisualizer.css';
 
 
-const ANIMATIONS_SPEED = 20;
-const NUMBER_OF_BARS = 120;
+const ANIMATIONS_SPEED = 1;
+const NUMBER_OF_BARS = 125;
 const PRIMARY_COLOUR = 'turquoise';
 const SECONDARY_COLOUR = 'red';
 
@@ -27,40 +27,45 @@ export default class SortingVisualizer extends React.Component{
         }
         this.setState({array});
     }
-    bubbleSort(){
-        
-       const animations = bubbleSort(this.state.array);
-       const arrayBars = document.getElementsByClassName('array-bar');
-       for(let i =0; i < animations.length; i++){
-        const isColourChange = i % 3 !==2;
-        if(isColourChange){
-            const [barOneIdx, barTwoIdx] = animations[i];
-            const barOneStyle = arrayBars[barOneIdx].style;
-            const barTwoStyle = arrayBars[barTwoIdx].style;
-            const colour = i % 3 === 0? SECONDARY_COLOUR : PRIMARY_COLOUR;
-            setTimeout(() => {
-                barOneStyle.backgroundColor = colour;
-                barTwoStyle.backgroundColor = colour;
-            }, i * ANIMATIONS_SPEED);
-        }else{
-            setTimeout(() => {
-                const scaling = 5
-                const [barOneIdx, newHeight] = animations[i];
-                const barOneStyle = arrayBars[barOneIdx].style;
-                barOneStyle.height = `${newHeight*scaling}px`;
-            }, i *ANIMATIONS_SPEED);
-        } 
-       }
+    bubbleSort() {
+        const animations = getBubbleSort(this.state.array); // get animation array 
+        for (let i = 0; i < animations.length; i++) { // iterate over animations 
+            const isColourChange = (i % 4 === 0) || (i % 4 === 1); // colour change every 4th iteration 
+            const arrayBars = document.getElementsByClassName('array-bar'); // get bar CSS 
+    
+            if (isColourChange === true) {
+                const colour = i % 4 === 0 ? SECONDARY_COLOUR : PRIMARY_COLOUR; // if 0, secondary colour applied, else primary colour 
+                const [barOneIdx, barTwoIdx] = animations[i]; // sets bar1,bar2 to the animation at that index. 
+                const barOneStyle = arrayBars[barOneIdx].style; // styles bar 1 
+                const barTwoStyle = arrayBars[barTwoIdx].style; // styles bar 2 
+    
+                setTimeout(() => { // delay to let animation look seamless 
+                    barOneStyle.backgroundColor = colour; // apply background colour 
+                    barTwoStyle.backgroundColor = colour; // apply background coour 
+                }, i * ANIMATIONS_SPEED); // the speed of the iteration is multiplied by desired value 
+            } else {
+                const [barIdx, newHeight] = animations[i]; // set bar and height to animation at that index 
+                if (barIdx === -1) { // if empty index, continue animation 
+                    continue;
+                }
+                const barStyle = arrayBars[barIdx].style; // style the bar even if its not swapped 
+                setTimeout(() => { // timeout again to apply height 
+                    barStyle.height = `${newHeight}px`; 
+                }, i * ANIMATIONS_SPEED); 
+            }
+        }
     }
+    
     testSort(){
         const javaScriptSortedArray = this.state.array
             .slice()
             .sort((a,b) => a-b);
-        const array = bubbleSort(this.state.array);
+        const array = getBubbleSort(this.state.array);
         console.log(array);
         console.log(arraysAreEqual(javaScriptSortedArray, array))
     }
     render(){
+        console.log("test434343", this.state);
         const {array} = this.state;
 
         return(
